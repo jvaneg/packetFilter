@@ -2,14 +2,12 @@
 # Author: Joel van Egmond
 # ID: 10102094
 #
-# Purpose: Generates a packet with IP header and Network layer header (TCP/UDP/Other),
+# Purpose: Generates a packet with an IP header and a Transport layer header (TCP/UDP/Other),
 #          and writes it to a file
 #
 # Usage: python pgen.py [tcp/udp/other] [source ip] [source port] [dest ip] [dest port] [out file name]
 #---------------------------------------
 
-import os
-import re
 import sys
 
 from scapy.all import ICMP, IP, TCP, UDP, raw

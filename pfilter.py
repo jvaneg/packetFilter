@@ -7,15 +7,14 @@
 #          A password is invalid if it follows the format [word], [number], [wordnumber], or [numberword]
 #          Where [word] comes from the words.txt file
 #
-# Usage: python3 entroll.py [username] [password]
+# Usage: python pfilter.py [rules] [packet]
 #
-# Note: requires argon2 library from https://pypi.org/project/argon2/
-#       must be run with python3
-#       doesn't allow usernames with ':' character in them (need a delimiter)
-#       user/pass combos are stored in the format [username]:[hashed password]:[salt]
+# Note: - requires scapy library from https://scapy.net/
+#       - assumes that rule file is of form:
+#           [allow/deny] [udp/tcp] [source ip]:[source port] -> [dest ip]:[dest port]
+#       - assumes that the packet file is well-formed, and contains IP header, TCP/UDP header, and payload (no link layer header)
 #---------------------------------------
 
-import os
 import re
 import sys
 
