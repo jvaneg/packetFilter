@@ -168,12 +168,6 @@ def main(argv):
 
     rulesList = getRulesList(rulesFile)
 
-    print(rulesList)
-
-    print("Protocol: " + str(pktProtocol))
-    print("Source: " + sourceAddr + ":" + str(sourcePort))
-    print("Destination: " + destAddr + ":" + str(destPort))
-
     for rule in rulesList:
         match, decision = rule.match(pktProtocol, sourceAddr, sourcePort, destAddr, destPort)
         if(match):
