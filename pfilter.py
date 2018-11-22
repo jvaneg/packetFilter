@@ -19,7 +19,7 @@ import os
 import re
 import sys
 
-from scapy.all import *
+from scapy.all import IP,UDP,TCP
 
 
 class Rule:
