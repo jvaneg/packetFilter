@@ -4,8 +4,12 @@
 #
 # Purpose: Generates a packet with an IP header and a Transport layer header (TCP/UDP/Other),
 #          and writes it to a file
+#          Intended to generate test files for pfilter.py
+#          You should probably make output files of type .dat but it doesn't really matter.
 #
 # Usage: python pgen.py [tcp/udp/other] [source ip] [source port] [dest ip] [dest port] [out file name]
+#
+# Note: - requires scapy library from https://scapy.net/
 #---------------------------------------
 
 import sys
