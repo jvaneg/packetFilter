@@ -95,7 +95,7 @@ class Rule:
     def match(self, protocol, sourceAddr, sourcePort, destAddr, destPort):
         if( self._matchProtocol_(protocol) and \
             Rule._matchAddr_(self.sourceAddr, sourceAddr) and Rule._matchPort_(self.sourcePort,sourcePort) and \
-            Rule._matchAddr_(self.sourceAddr, sourceAddr) and Rule._matchPort_(self.destPort,destPort) ):
+            Rule._matchAddr_(self.destAddr, destAddr) and Rule._matchPort_(self.destPort,destPort) ):
             return (True, self.decision)
         else:
             return (False, UNSPECIFIED)
