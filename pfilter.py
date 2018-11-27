@@ -19,16 +19,15 @@
 #
 # Usage:   python pfilter.py [rules] [packet]
 #
-# Note: - requires scapy library from https://scapy.net/
-#       - assumes that rule file is well-formed and of form:
+# Note: - assumes that rule file is well-formed and of form:
 #           [allow/deny] [udp/tcp] [source ip]:[source port] -> [dest ip]:[dest port]
 #       - assumes that the packet file is well-formed, and contains IP header, TCP/UDP header, and payload (no link layer header)
 #---------------------------------------
 
 import re
+import socket
 import sys
-
-from scapy.all import IP,UDP,TCP
+from struct import unpack
 
 #---------------------------------------
 # Purpose: Represents a single rule from the rule file
@@ -177,7 +176,6 @@ def main(argv):
     print(UNSPECIFIED) # no matching rule
     exit(-1)
 
-
 #---------------------------------------
 # Purpose: Gets the data needed from the binary packet file to compare it to rules
 #          This comprises of the Transport Protocol, source IP and port,
@@ -194,21 +192,27 @@ def main(argv):
 def getPacketData(packetFile):
     packetContent = open(packetFile,"rb").read()
 
-    packet = IP(packetContent)
+    ipHeaderBytes = packetContent[:IP_MIN_HEADER_SIZE]
+    ipHeader = unpack('!BBHHHBBH4s4s', ipHeaderBytes)
 
-    pktProtocol = packet[IP].proto
-    sourceAddr = packet[IP].src
-    destAddr = packet[IP].dst
+    sourceAddr = socket.inet_ntoa(ipHeader[8])
+    destAddr = socket.inet_ntoa(ipHeader[9])
+    pktProtocol = ipHeader[6]
+    ipHeaderLength = (ipHeader[0] & CLEAR_FIRST_FOUR_BYTES)*BYTES_PER_LONG
 
-    if(pktProtocol == TCP_PROTOCOL):
-        sourcePort = packet[TCP].sport
-        destPort = packet[TCP].dport
-    elif(pktProtocol == UDP_PROTOCOL):
-        sourcePort = packet[UDP].sport
-        destPort = packet[UDP].dport
-    else:
-        sourcePort = 0
-        destPort = 0
+    #print(sourceAddr)
+    #print(destAddr)
+    #print(pktProtocol)
+    #print(ipHeaderLength)
+
+    transportHeaderBytes = packetContent[ipHeaderLength:ipHeaderLength+BYTES_PER_LONG]
+    transportHeader = unpack('!HH', transportHeaderBytes)
+
+    sourcePort = transportHeader[0]
+    destPort = transportHeader[1]
+
+    #print(sourcePort)
+    #print(destPort)
 
     return (pktProtocol, sourceAddr, sourcePort, destAddr, destPort)
 
@@ -235,6 +239,9 @@ def getRulesList(rulesFile):
 # Constants
 TCP_PROTOCOL = 6    # TCP protocol number
 UDP_PROTOCOL = 17   # UDP protocol number
+IP_MIN_HEADER_SIZE = 20     # Minimum IP header size in bytes
+BYTES_PER_LONG = 4  # number of bytes in a long
+CLEAR_FIRST_FOUR_BYTES = 0x0F   # clears the first 4 bits
 
 UNSPECIFIED = "unspecified"      # other/unspecified string
 

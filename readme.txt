@@ -1,21 +1,25 @@
--Requires scapy library from https://scapy.net/
-    - install with:
-    pip install scapy
-    OR
-    pip install --user scapy
-
 -pfilter.py is the main packet filtering program
 -Usage: 
     python pfilter.py [rules] [packet]
 
+    -pfilter.py does NOT require scapy
+
 -pgen.py is a program that generates binary packet files to test with
 -Usage:
-    python pgen.py [tcp/udp/other] [source ip] [source port] [dest ip] [dest port] [out file name] 
+    python pgen.py [tcp/udp/other] [source ip] [source port] [dest ip] [dest port] [out file name]
+
+    -pgen.py requires scapy library from https://scapy.net/
+        - install with:
+        pip install scapy
+        OR
+        pip install --user scapy
 
 -Assumptions:
      -assumes that rule file is well-formed and of form:
         [allow/deny] [udp/tcp] [source ip]:[source port] -> [dest ip]:[dest port]
      -assumes that the packet file is well-formed, and contains IP header, TCP/UDP header, and payload (no link layer header)
+
+Note: If you want to run my test cases without using pgen.py, all test packets are in the /testPkts/ folder, and all test rules are in the /testRules/ folder.
 
 
 pfilter.py documentation:
@@ -37,8 +41,7 @@ pfilter.py documentation:
 #
 # Usage:   python pfilter.py [rules] [packet]
 #
-# Note: - requires scapy library from https://scapy.net/
-#       - assumes that rule file is well-formed and of form:
+# Note: - assumes that rule file is well-formed and of form:
 #           [allow/deny] [udp/tcp] [source ip]:[source port] -> [dest ip]:[dest port]
 #       - assumes that the packet file is well-formed, and contains IP header, TCP/UDP header, and payload (no link layer header)
 #---------------------------------------
