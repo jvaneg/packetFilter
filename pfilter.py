@@ -200,19 +200,11 @@ def getPacketData(packetFile):
     pktProtocol = ipHeader[6]
     ipHeaderLength = (ipHeader[0] & CLEAR_FIRST_FOUR_BYTES)*BYTES_PER_LONG
 
-    #print(sourceAddr)
-    #print(destAddr)
-    #print(pktProtocol)
-    #print(ipHeaderLength)
-
     transportHeaderBytes = packetContent[ipHeaderLength:ipHeaderLength+BYTES_PER_LONG]
     transportHeader = unpack('!HH', transportHeaderBytes)
 
     sourcePort = transportHeader[0]
     destPort = transportHeader[1]
-
-    #print(sourcePort)
-    #print(destPort)
 
     return (pktProtocol, sourceAddr, sourcePort, destAddr, destPort)
 
